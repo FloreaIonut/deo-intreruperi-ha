@@ -1,0 +1,65 @@
+# Automatizări exemplu pentru integrarea deo_intreruperi.
+# Înlocuiește `notify.mobile_app_TELEFONUL_TAU` cu serviciul de notificare al telefonului tău
+# (Setări > Dispozitive și servicii > Aplicația mobilă > serviciul notify.mobile_app_...).
+# Entity_id-urile rezultă din numele dispozitivului + numele entităților:
+#   binary_sensor.intreruperi_distributie_oltenia_intrerupere_detectata
+#   sensor.intreruperi_distributie_oltenia_potriviri
+#   sensor.intreruperi_distributie_oltenia_ultima_saptamana_procesata
+#   sensor.intreruperi_distributie_oltenia_randuri_localitate
+#   sensor.intreruperi_distributie_oltenia_urmatoarea_intrerupere
+
+- id: deo_alerta_intrerupere
+  alias: "DEO – ALERTĂ ÎNTRERUPERE"
+  description: "Alertă la fiecare potrivire nouă (cuvânt-cheie/PTA) din programul DEO."
+  mode: queued
+  max: 10
+  triggers:
+    - trigger: event
+      event_type: deo_intreruperi_potrivire
+  conditions: []
+  actions:
+    - action: notify.mobile_app_TELEFONUL_TAU
+      data:
+        title: "Întrerupere curent – Cuza Vodă"
+        message: >-
+          {% set d = trigger.event.data %}
+          Data: {{ strptime(d.data, '%Y-%m-%d').strftime('%d.%m.%Y') }},
+          interval: {{ d.interval_orar }}.
+          Localitate: {{ d.localitate | default('–', true) }}.
+          Zona: {{ d.zona | default('–', true) | truncate(220) }}.
+
+- id: deo_verificare_saptamanala
+  alias: "DEO – VERIFICARE SĂPTĂMÂNALĂ"
+  description: "Luni 08:00: anunță dacă verificarea a eșuat sau rezumatul săptămânii."
+  mode: single
+  triggers:
+    - trigger: time
+      at: "08:00:00"
+  conditions:
+    - condition: time
+      weekday:
+        - mon
+  actions:
+    - variables:
+        saptamana: "{{ states('sensor.intreruperi_distributie_oltenia_ultima_saptamana_procesata') }}"
+        nr: "{{ states('sensor.intreruperi_distributie_oltenia_potriviri') | int(0) }}"
+        erori: "{{ state_attr('sensor.intreruperi_distributie_oltenia_ultima_saptamana_procesata', 'erori') | int(0) }}"
+        esec: >-
+          {{ saptamana in ['unavailable', 'unknown', 'none', ''] }}
+        mesaj: >-
+          {% if esec %}
+            Nu am putut citi programul DEO (site blocat, rețea sau format schimbat). Vezi logul integrării deo_intreruperi.
+          {% elif nr > 0 %}
+            Există {{ nr }} potriviri pentru Cuza Vodă (săptămâna {{ saptamana }}).{{ ' Atenție: ' ~ erori ~ ' săptămână/i nu s-au putut citi.' if erori > 0 else '' }}
+          {% else %}
+            Nicio întrerupere pentru Cuza Vodă în săptămâna {{ saptamana }}.{{ ' Atenție: ' ~ erori ~ ' săptămână/i nu s-au putut citi.' if erori > 0 else '' }}
+          {% endif %}
+        titlu: >-
+          {{ 'Verificarea întreruperilor a eșuat' if esec else 'Întreruperi DEO – verificare săptămânală' }}
+    - action: notify.mobile_app_TELEFONUL_TAU
+      data:
+        title: "{{ titlu }}"
+        message: "{{ mesaj | trim }}"
+        data:
+          importance: default
+          channel: Alerte Normale

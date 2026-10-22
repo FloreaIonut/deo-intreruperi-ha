@@ -1,0 +1,42 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Întreruperi Distribuție Oltenia",
+        "description": "Pagina județului cu programul săptămânal de întreruperi (PDF). Listele se scriu separate prin virgulă.",
+        "data": {
+          "url": "Adresa paginii județului",
+          "keywords": "Cuvinte-cheie (alertă)",
+          "locality": "Localitate de urmărit (filtrează alerta)",
+          "pta": "Nume PTA / posturi de urmărit (alertă)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nu pot descărca pagina (rețea, timeout sau eroare HTTP). Vezi logul.",
+      "blocked": "Site-ul a blocat cererea (WAF / 403 / pagină „Blocked”).",
+      "no_links": "Pagina s-a descărcat, dar nu conține linkuri de săptămână."
+    },
+    "abort": {
+      "already_configured": "Această pagină este deja configurată."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opțiuni Întreruperi Distribuție Oltenia",
+        "data": {
+          "url": "Adresa paginii județului",
+          "keywords": "Cuvinte-cheie (alertă)",
+          "locality": "Localitate de urmărit (filtrează alerta)",
+          "pta": "Nume PTA / posturi de urmărit (alertă)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nu pot descărca pagina (rețea, timeout sau eroare HTTP). Vezi logul.",
+      "blocked": "Site-ul a blocat cererea (WAF / 403 / pagină „Blocked”).",
+      "no_links": "Pagina s-a descărcat, dar nu conține linkuri de săptămână."
+    }
+  }
+}

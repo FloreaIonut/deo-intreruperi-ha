@@ -1,0 +1,42 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Distribuție Oltenia outages",
+        "description": "County page with the weekly outage schedule (PDF). Lists are comma-separated.",
+        "data": {
+          "url": "County page URL",
+          "keywords": "Keywords (alert)",
+          "locality": "Locality to watch (filters the alert)",
+          "pta": "PTA / substation names to watch (alert)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot download the page (network, timeout or HTTP error). See the log.",
+      "blocked": "The site blocked the request (WAF / 403 / \"Blocked\" page).",
+      "no_links": "The page downloaded but contains no weekly links."
+    },
+    "abort": {
+      "already_configured": "This page is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Distribuție Oltenia outages options",
+        "data": {
+          "url": "County page URL",
+          "keywords": "Keywords (alert)",
+          "locality": "Locality to watch (filters the alert)",
+          "pta": "PTA / substation names to watch (alert)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot download the page (network, timeout or HTTP error). See the log.",
+      "blocked": "The site blocked the request (WAF / 403 / \"Blocked\" page).",
+      "no_links": "The page downloaded but contains no weekly links."
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# Card „Istoric întreruperi” (core, fără dependențe). Se lipește în dashboard:
+# Editează dashboard > Adaugă card > Manual (sau în YAML-ul view-ului).
+# Entități: sensor.intreruperi_distributie_oltenia_istoric_intreruperi (atribut `istoric`)
+#           sensor.intreruperi_distributie_oltenia_ultima_intrerupere
+type: markdown
+title: Întreruperi programate – Curtea de Argeș
+content: |-
+  {%- set istoric = state_attr('sensor.intreruperi_distributie_oltenia_istoric_intreruperi', 'istoric') -%}
+  {%- set u = 'sensor.intreruperi_distributie_oltenia_ultima_intrerupere' -%}
+  {%- if istoric is none or istoric | length == 0 -%}
+  Nicio întrerupere programată în istoric (încă).
+  {%- else -%}
+  **Ultima întrerupere:** {% if state_attr(u, 'data') %}{{ strptime(state_attr(u, 'data'), '%Y-%m-%d').strftime('%d.%m.%Y') }}, {{ state_attr(u, 'interval_orar') }}, {{ state_attr(u, 'localitate') or '–' }}{% else %}–{% endif %}
+
+  | Data | Interval | Localitate | Postul / zona |
+  |:--|:--|:--|:--|
+  {% for r in istoric -%}
+  | {{ strptime(r.data, '%Y-%m-%d').strftime('%d.%m.%Y') }} | {{ r.interval_orar }} | {{ (r.localitate or '–') ~ (' (?)' if r.localitate_necunoscuta else '') }} | {{ (r.zona or '–') | replace('|', '/') | truncate(90) }} |
+  {% endfor -%}
+  {%- endif -%}

@@ -1,0 +1,12 @@
+{
+  "domain": "deo_intreruperi",
+  "name": "Întreruperi Distribuție Oltenia",
+  "codeowners": ["@FloreaIonut"],
+  "config_flow": true,
+  "documentation": "https://github.com/FloreaIonut/deo-intreruperi-ha",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/FloreaIonut/deo-intreruperi-ha/issues",
+  "requirements": ["pypdf"],
+  "version": "0.2.0"
+}
